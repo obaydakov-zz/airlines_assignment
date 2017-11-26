@@ -26,9 +26,15 @@ raj_ops
 
 /usr/local/Cellar/hadoop/2.8.1/
 ./sbin/start-dfs.sh && ./sbin/start-yarn.sh
-sbin/stop-yarn.sh
-sbin/stop-dfs.sh
+/usr/local/Cellar/hadoop/2.8.1/sbin/stop-yarn.sh && ./usr/local/Cellar/hadoop/2.8.1/sbin/stop-dfs.sh
+
+export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.8.1/libexec/etc/hadoop
+
 http://localhost:8088/cluster - yarn
+
+// SPARK APP UNDER YARN CLIENT
+https://stackoverflow.com/questions/20586920/hadoop-connecting-to-resourcemanager-failed
+https://community.hortonworks.com/questions/84654/how-to-run-spark-application-with-yarn-client-mode.html
 
 /usr/local/Cellar/hive/2.1.1
 /usr/local/Cellar/hive/2.1.1/lib/mysql-connector-java-5.1.44-bin.jar
