@@ -1,0 +1,26 @@
+Creating Extensions for sparklyr
+http://spark.rstudio.com/extensions/
+
+Introduction
+
+The sparklyr package provides a dplyr interface to Spark DataFrames as well as an R interface to Spark’s distributed machine learning pipelines. However, since Spark is a general-purpose cluster computing system there are many other R interfaces that could be built (e.g. interfaces to custom machine learning pipelines, interfaces to 3rd party Spark packages, etc.).
+
+The facilities used internally by sparklyr for its dplyr and machine learning interfaces are available to extension packages. This guide describes how you can use these tools to create your own custom R interfaces to Spark.
+
+EXAMPLES
+
+Here’s an example of an extension function that calls the text file line counting function available via the SparkContext:
+
+library(sparklyr)
+count_lines <- function(sc, file) {
+  spark_context(sc) %>% 
+    invoke("textFile", file, 1L) %>% 
+    invoke("count")
+}
+The count_lines function takes a spark_connection (sc) argument which enables it to obtain a reference to the SparkContext object, and in turn call the textFile().count() method.
+
+You can use this function with an existing sparklyr connection as follows:
+
+library(sparklyr)
+sc <- spark_connect(master = "local")
+count_lines(sc, "hdfs://path/data.csv")

@@ -127,7 +127,8 @@ res5: Array[(String, scala.collection.mutable.HashSet[Int])]  =Array((b,Set(7)),
 
 
 
-
+// airlines_dubai
+http://spark.rstudio.com/examples/yarn-cluster-emr/
 
 
 // HIVE tables RAW data
