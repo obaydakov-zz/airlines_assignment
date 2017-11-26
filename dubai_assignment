@@ -26,6 +26,8 @@ raj_ops
 
 /usr/local/Cellar/hadoop/2.8.1/
 ./sbin/start-dfs.sh && ./sbin/start-yarn.sh
+
+/usr/local/Cellar/hadoop/2.8.1/sbin/start-dfs.sh && /usr/local/Cellar/hadoop/2.8.1/sbin/start-yarn.sh
 /usr/local/Cellar/hadoop/2.8.1/sbin/stop-yarn.sh && ./usr/local/Cellar/hadoop/2.8.1/sbin/stop-dfs.sh
 
 export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.8.1/libexec/etc/hadoop
