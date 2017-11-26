@@ -1,5 +1,4 @@
 
-
 docker load -i HDP_2.6.3_docker_10_11_2017.tar
 https://hortonworks.com/tutorial/sandbox-deployment-and-install-guide/section/3/#for-mac
 ssh -p 2222 root@localhost
@@ -25,7 +24,6 @@ raj_ops
 
 ./sbin/start-thriftserver.sh --master spark://localhost:7077 --total-executor-cores 2 --driver-class-path --hiveconf hive.server2.thrift.port=9083 --hiveconf hive.server2.thrift.bind.host localhost
 
-
 /usr/local/Cellar/hadoop/2.8.1/
 ./sbin/start-dfs.sh && ./sbin/start-yarn.sh
 sbin/stop-yarn.sh
@@ -38,11 +36,8 @@ export HIVE_HOME=/usr/local/Cellar/hive/2.1.1
 export HIVE_CONF_DIR=/usr/local/Cellar/hive/2.1.1/libexec/con
 
 $HIVE_HOME/bin/hiveserver2
-$HIVE_HOME/bin/hive --service metastore   <-!!!!!!
+$HIVE_HOME/bin/hive --service metastore   <-!!!!!!!!!!!
 netstat -an | grep 9083
-
-
-
 
  // pictures for presentation
  http://blog.cloudera.com/blog/2014/11/flafka-apache-flume-meets-apache-kafka-for-event-processing/
