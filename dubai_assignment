@@ -42,7 +42,7 @@ $HIVE_HOME/bin/hive --service metastore   <-!!!!!!
 netstat -an | grep 9083
 
 
-//test
+
 
  // pictures for presentation
  http://blog.cloudera.com/blog/2014/11/flafka-apache-flume-meets-apache-kafka-for-event-processing/
