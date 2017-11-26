@@ -1,0 +1,324 @@
+
+
+docker load -i HDP_2.6.3_docker_10_11_2017.tar
+https://hortonworks.com/tutorial/sandbox-deployment-and-install-guide/section/3/#for-mac
+ssh -p 2222 root@localhost
+
+
+// spark docker
+https://vitalflux.com/hello-world-with-apache-spark-standalone-cluster-on-docker/
+https://grzegorzgajda.gitbooks.io/spark-examples/content/basics/docker.html
+
+List all containers (only IDs) docker ps -aq.
+Stop all running containers. docker stop $(docker ps -aq)
+Remove all containers. docker rm $(docker ps -aq)
+Remove all images. docker rmi $(docker images -q)
+
+docker-compose up -d
+docker inspect 843460507f96 | grep IPAddress
+
+raj_ops
+
+/Users/olegbaydakov/Downloads/spark-2.2.0-bin-hadoop2.7
+./sbin/start-master.sh -i $SPARK_LOCAL_IP 
+./sbin/start-slave.sh spark://$SPARK_LOCAL_IP:7077 
+
+./sbin/start-thriftserver.sh --master spark://localhost:7077 --total-executor-cores 2 --driver-class-path --hiveconf hive.server2.thrift.port=9083 --hiveconf hive.server2.thrift.bind.host localhost
+
+
+/usr/local/Cellar/hadoop/2.8.1/
+./sbin/start-dfs.sh && ./sbin/start-yarn.sh
+sbin/stop-yarn.sh
+sbin/stop-dfs.sh
+http://localhost:8088/cluster - yarn
+
+/usr/local/Cellar/hive/2.1.1
+/usr/local/Cellar/hive/2.1.1/lib/mysql-connector-java-5.1.44-bin.jar
+export HIVE_HOME=/usr/local/Cellar/hive/2.1.1
+export HIVE_CONF_DIR=/usr/local/Cellar/hive/2.1.1/libexec/con
+
+$HIVE_HOME/bin/hiveserver2
+$HIVE_HOME/bin/hive --service metastore   <-!!!!!!
+netstat -an | grep 9083
+
+
+//test
+
+ // pictures for presentation
+ http://blog.cloudera.com/blog/2014/11/flafka-apache-flume-meets-apache-kafka-for-event-processing/
+ https://geekatwork.wordpress.com/2016/04/28/install-hadoop-and-spark-on-a-mac/
+ http://zhongyaonan.com/hadoop-tutorial/setting-up-hadoop-2-6-on-mac-osx-yosemite.html
+
+zkServer start
+
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+#cd /usr/local/Cellar/kafka/0.11.0.1/bin
+#$ sh kafka-server-start /usr/local/etc/kafka/server.properties
+
+bin/kafka-server-start.sh config/server.properties
+bin/kafka-server-start.sh config/server-1.properties
+bin/kafka-server-start.sh config/server-2.properties
+
+sh kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+
+
+sh kafka-topics --list --zookeeper localhost:2181
+
+sh kafka-console-producer.sh --broker-list localhost:9092 --topic replicated_test < ~/Documents/airlines_dubai/airports.csv
+
+// kafka producer
+bin/kafka-console-producer.sh --broker-list localhost:9092 --topic planedate < ~/Documents/airlines_dubai/2008_short.csv
+bin/kafka-console-producer.sh --broker-list localhost:9092 --topic airports < ~/Documents/airlines_dubai/airports.csv
+bin/kafka-console-producer.sh --broker-list localhost:9092 --topic carriers < ~/Documents/airlines_dubai/carriers.csv
+
+
+// flume-agent
+sh flume-ng agent --conf conf --conf-file planedate.conf --name a1 -Dflume.root.logger=INFO,console
+sh flume-ng agent --conf conf --conf-file airports.conf --name a1 -Dflume.root.logger=INFO,console
+
+
+// cluster
+cp config/server.properties config/server-1.properties
+cp config/server.properties config/server-2.properties
+
+port=9093
+    log.dir=/tmp/kafka-logs-1
+
+
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic airports  
+
+pkill -9 -f server-1.properties
+
+export HADOOP_OPTS="$HADOOP_OPTS -Djava.net.preferIPv4Stack=true -Djava.security.krb5.realm= -Djava.security.krb5.kdc="
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+
+Shutting down NameNode at olegs-macbook-pro-new.local/192.168.1.6
+
+/usr/local/Cellar/hadoop/2.8.1/
+
+https://jhui.github.io/2017/01/15/Apache-Spark-Streaming/
+
+
+sh flume-ng agent --conf conf --conf-file airports.conf --name a1 -Dflume.root.logger=INFO,console
+
+sh flume-ng agent --conf conf --conf-file planedate.conf --name a1 -Dflume.root.logger=INFO,console
+
+// avro schema
+java -jar avro-tools-1.7.7.jar getschema events.1458147890641.avro
+
+
+// AggregateByKEy, ReduceByKey
+//http://crazyslate.com/groupbykey-reducebykey-aggregatebykey-and-combinebykey-in-spark/
+val resReduce = pairs.reduceByKey(_ + _) //the same operation for everything
+resReduce.collect
+res3: Array[(String, Int)] = Array((b,7), (a,9))
+
+import scala.collection.mutable.HashSet
+//the initial value is a void Set. Adding an element to a set is the first
+//_+_ Join two sets is the  _++_
+val sets = pairs.aggregateByKey(new HashSet[Int])(_+_, _++_)
+sets.collect
+res5: Array[(String, scala.collection.mutable.HashSet[Int])]  =Array((b,Set(7)), (a,Set(1, 5, 3)))
+
+
+
+
+
+
+
+// HIVE tables RAW data
+use default;
+drop table if exists carriers;
+CREATE EXTERNAL TABLE IF NOT EXISTS carriers(
+    Code STRING, Description STRING
+   )
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    STORED AS TEXTFILE
+    LOCATION '/data/raw/carriers'
+    tblproperties ("skip.header.line.count"="1")
+    ;
+
+
+
+use default;
+drop table if exists airports;
+CREATE EXTERNAL TABLE IF NOT EXISTS airports(
+iata STRING,
+airport STRING,
+city STRING,
+state STRING,
+country STRING,
+lat STRING,
+longt STRING)
+ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    STORED AS TEXTFILE
+    LOCATION '/data/raw/airports'
+   tblproperties ("skip.header.line.count"="1") 
+    ;
+
+use default;
+drop table if exists planedate;
+CREATE EXTERNAL TABLE IF NOT EXISTS planedate(
+ Year STRING,
+ Month STRING,
+ DayofMonth STRING,
+ DayOfWeek STRING,
+ DepTime STRING,
+ CRSDepTime STRING,
+ ArrTime STRING,
+ CRSArrTime STRING,
+ UniqueCarrier STRING,
+ FlightNum STRING,
+ TailNum STRING,
+ ActualElapsedTime STRING,
+ CRSElapsedTime STRING,
+ AirTime STRING,
+ ArrDelay STRING,
+ DepDelay STRING,
+ Origin STRING,
+ Dest STRING,
+ Distance STRING,
+ TaxiIn STRING,
+ TaxiOut STRING,
+ Cancelled STRING,
+ CancellationCode STRING,
+ Diverted STRING,
+ CarrierDelay STRING,
+ WeatherDelay STRING,
+ NASDelay STRING,
+ SecurityDelay STRING,
+ LateAircraftDelay STRING)   
+ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    STORED AS TEXTFILE
+    LOCATION '/data/raw/planedate'
+   tblproperties ("skip.header.line.count"="1") 
+    ;
+
+
+tblproperties ("skip.header.line.count"="1")
+
+// HIVE tables decompossed
+use decomposed;
+drop table if exists carriers;
+CREATE EXTERNAL TABLE IF NOT EXISTS carriers(
+    Code STRING, Description STRING,
+    insert_time timestamp,
+    uuid string
+   )
+    STORED AS AVRO
+    LOCATION '/data/decomposed/carriers';
+
+use decomposed;
+INSERT OVERWRITE TABLE carriers SELECT * , CURRENT_TIMESTAMP AS insert_time, 
+reflect("java.util.UUID", "randomUUID") as uuid FROM default.carriers;
+
+
+use decomposed;
+drop table if exists airports;
+CREATE EXTERNAL TABLE IF NOT EXISTS airports(
+iata STRING,
+airport STRING,
+city STRING,
+state STRING,
+country STRING,
+lat STRING,
+longt STRING,
+ insert_time timestamp,
+ uuid string
+)
+ STORED AS AVRO
+    LOCATION '/data/decomposed/airports';
+
+ use decomposed;
+INSERT OVERWRITE TABLE airports SELECT 
+REGEXP_REPLACE(airport,'"',''),REGEXP_REPLACE(airport,'"',''),REGEXP_REPLACE(city,'"',''),
+REGEXP_REPLACE(state,'"',''),REGEXP_REPLACE(country,'"','') ,lat,long as longt  , CURRENT_TIMESTAMP AS insert_time, 
+reflect("java.util.UUID", "randomUUID") as uuid FROM default.airports;
+
+
+
+use decomposed;
+drop table if exists planedate;
+CREATE EXTERNAL TABLE IF NOT EXISTS planedate(
+ Year STRING,
+ Month STRING,
+ DayofMonth STRING,
+ DayOfWeek STRING,
+ DepTime STRING,
+ CRSDepTime STRING,
+ ArrTime STRING,
+ CRSArrTime STRING,
+ UniqueCarrier STRING,
+ FlightNum STRING,
+ TailNum STRING,
+ ActualElapsedTime STRING,
+ CRSElapsedTime STRING,
+ AirTime STRING,
+ ArrDelay STRING,
+ DepDelay STRING,
+ Origin STRING,
+ Dest STRING,
+ Distance STRING,
+ TaxiIn STRING,
+ TaxiOut STRING,
+ Cancelled STRING,
+ CancellationCode STRING,
+ Diverted STRING,
+ CarrierDelay STRING,
+ WeatherDelay STRING,
+ NASDelay STRING,
+ SecurityDelay STRING,
+ LateAircraftDelay STRING,
+ insert_time timestamp,
+ uuid string)   
+STORED AS AVRO
+    LOCATION '/data/decomposed/planedate';
+
+use decomposed;
+INSERT OVERWRITE TABLE planedate SELECT * , CURRENT_TIMESTAMP AS insert_time, 
+reflect("java.util.UUID", "randomUUID") as uuid FROM default.planedate;
+
+
+
+// HIVE MODELLED
+use modelled;
+drop table if exists planedate;
+CREATE EXTERNAL TABLE IF NOT EXISTS planedate(
+ Year STRING,
+ Month STRING,
+ DayofMonth STRING,
+ DayOfWeek STRING,
+ DepTime STRING,
+ CRSDepTime STRING,
+ ArrTime STRING,
+ CRSArrTime STRING,
+ UniqueCarrier STRING,
+ FlightNum STRING,
+ TailNum STRING,
+ ActualElapsedTime STRING,
+ CRSElapsedTime STRING,
+ AirTime STRING,
+ ArrDelay STRING,
+ DepDelay STRING,
+ Origin STRING,
+ Dest STRING,
+ Distance STRING,
+ TaxiIn STRING,
+ TaxiOut STRING,
+ Cancelled STRING,
+ CancellationCode STRING,
+ Diverted STRING,
+ CarrierDelay STRING,
+ WeatherDelay STRING,
+ NASDelay STRING,
+ SecurityDelay STRING,
+ LateAircraftDelay STRING,
+ insert_time STRING,
+ uuid string)   
+STORED AS PARQUET
+    LOCATION '/data/modelled/planedate/';
+
