@@ -36,7 +36,7 @@ export HIVE_HOME=/usr/local/Cellar/hive/2.1.1
 export HIVE_CONF_DIR=/usr/local/Cellar/hive/2.1.1/libexec/con
 
 $HIVE_HOME/bin/hiveserver2
-$HIVE_HOME/bin/hive --service metastore   <-!!!!!!!!!!!
+$HIVE_HOME/bin/hive --service metastore   <-!!!!!!!!!!!xxxx
 netstat -an | grep 9083
 
  // pictures for presentation
