@@ -130,8 +130,11 @@ res5: Array[(String, scala.collection.mutable.HashSet[Int])]  =Array((b,Set(7)),
 // airlines_dubai
 http://spark.rstudio.com/examples/yarn-cluster-emr/
 
+http://www.rpubs.com/nwstephens/airontime
 
-// HIVE tables RAW data
+
+
+// HIVE tables RAW data ///////
 use default;
 drop table if exists carriers;
 CREATE EXTERNAL TABLE IF NOT EXISTS carriers(
