@@ -13,6 +13,10 @@ Stop all running containers. docker stop $(docker ps -aq)
 Remove all containers. docker rm $(docker ps -aq)
 Remove all images. docker rmi $(docker images -q)
 
+docker run -v /Users/<path>:/<container path>
+docker exec -it <container-id> /bin/bash
+docker cp ~/Downloads/dl4j-spark_2.11-0.9.1_spark_2.jar jolly_albattani:/root/.m2/repository
+
 docker-compose up -d
 docker inspect 843460507f96 | grep IPAddress
 
