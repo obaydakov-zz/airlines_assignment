@@ -16,19 +16,29 @@ Remove all images. docker rmi $(docker images -q)
 docker run -v /Users/<path>:/<container path>
 docker exec -it <container-id> /bin/bash
 docker cp ~/Downloads/dl4j-spark_2.11-0.9.1_spark_2.jar jolly_albattani:/root/.m2/repository
+docker logs <container_name>
 
 docker-compose up -d
 docker inspect 843460507f96 | grep IPAddress
 
 raj_ops
 
-/Users/olegbaydakov/Downloads/spark-2.2.0-bin-hadoop2.7
+## SPARK ###########################
+cd /Users/olegbaydakov/Downloads/spark-2.2.0-bin-hadoop2.7
 ./sbin/start-master.sh -i $SPARK_LOCAL_IP 
-./sbin/start-slave.sh spark://$SPARK_LOCAL_IP:7077 
+./sbin/start-slave.sh spark://$SPARK_LOCAL_IP:7077
+ 
+### SPARK EXAMPLE ############
+export MASTER=spark://$(hostname):7077
+export SPARK_WORKER_INSTANCES=2
+export CORES_PER_WORKER=1 
+export TOTAL_CORES=$((${CORES_PER_WORKER}*${SPARK_WORKER_INSTANCES})) 
+${SPARK_HOME}/sbin/start-master.sh; ${SPARK_HOME}/sbin/start-slave.sh -c $CORES_PER_WORKER -m 3G ${MASTER}
+###############################
 
 ./sbin/start-thriftserver.sh --master spark://localhost:7077 --total-executor-cores 2 --driver-class-path --hiveconf hive.server2.thrift.port=9083 --hiveconf hive.server2.thrift.bind.host localhost
 
-/usr/local/Cellar/hadoop/2.8.1/
+cd /usr/local/Cellar/hadoop/2.8.1/
 ./sbin/start-dfs.sh && ./sbin/start-yarn.sh
 
 /usr/local/Cellar/hadoop/2.8.1/sbin/start-dfs.sh && /usr/local/Cellar/hadoop/2.8.1/sbin/start-yarn.sh
@@ -77,7 +87,7 @@ sh kafka-console-producer.sh --broker-list localhost:9092 --topic replicated_tes
 // kafka producer
 bin/kafka-console-producer.sh --broker-list localhost:9092 --topic planedate < ~/Documents/airlines_dubai/2008_short.csv
 bin/kafka-console-producer.sh --broker-list localhost:9092 --topic airports < ~/Documents/airlines_dubai/airports.csv
-bin/kafka-console-producer.sh --broker-list localhost:9092 --topic carriers < ~/Documents/airlines_dubai/carriers.csv
+bin/kafka-console-producer.sh --broker-list localhost:9092 --topic carriers < ~/Documents/airlines_dubai/carriers.cs /tmp/flafka
 
 
 // flume-agent
@@ -135,6 +145,9 @@ res5: Array[(String, scala.collection.mutable.HashSet[Int])]  =Array((b,Set(7)),
 http://spark.rstudio.com/examples/yarn-cluster-emr/
 
 http://www.rpubs.com/nwstephens/airontime
+
+// spark 2 logitic regresion
+https://community.hortonworks.com/articles/53903/spark-machine-learning-pipeline-by-example.html
 
 
 
@@ -332,4 +345,21 @@ CREATE EXTERNAL TABLE IF NOT EXISTS planedate(
  uuid string)   
 STORED AS PARQUET
     LOCATION '/data/modelled/planedate/';
+
+
+
+
+    docker run --name shinyrstudio -d -p 8701:8787 -p 3801:3838 \
+  -e ROOT=TRUE -e USER=admin -e PASSWORD=test \
+  -v /Users/olegbaydakov/Documents/Books/R/Docker/srv/shiny-server:/srv/shiny-server/ \
+  -v /Users/olegbaydakov/Documents/Books/R/Docker/:/var/log/ \
+  4997f02d1d87
+
+// Shiny server
+https://github.com/rstudio/shiny-server/tree/master/docker
+  docker run --rm -d -p 3838:3838 \
+    -v /Users/olegbaydakov/Documents/Books/R/Docker/srv/shiny-server:/srv/shiny-server/ \
+    -v /Users/olegbaydakov/Documents/Books/R/Docker/srv/shiny-server:/var/log/shiny-server/ \
+    rocker/shiny
+
 

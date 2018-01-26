@@ -1,0 +1,12 @@
+name: Time_Gained_in_Flight
+title: Time_Gained_in_Flight
+username:
+account: ippromek
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 246956
+bundleId: 1126811
+url: https://ippromek.shinyapps.io/Time_Gained_in_Flight/
+when: 1512945594.57438
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/340036/4988ea04641d43c5ae2da6e4613dd961
+bundleId: https://api.rpubs.com/api/v1/document/340036/4988ea04641d43c5ae2da6e4613dd961
+url: http://rpubs.com/ippromek/340036
+when: 1512950231.82399
